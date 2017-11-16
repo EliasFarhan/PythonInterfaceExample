@@ -6,10 +6,11 @@
  */
 
 #include <engine/engine.h>
+#include <iostream>
 
 void Component::Init()
 {
-
+	std::cout << "C++ Init\n";
 }
 
 void Component::Update()

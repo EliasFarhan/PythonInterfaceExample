@@ -28,7 +28,10 @@ int main()
 {
 	sfge::PythonManager pythonManager;
 	pythonManager.Init();
-	pythonManager.LoadFile("data/scripts/test.py");
+	auto test1 = pythonManager.LoadFile("data/scripts/test.py");
+	auto test2 = pythonManager.LoadFile("data/scripts/test2.py");
+	test2.attr("set_test")(test1);
+	test2.attr("Init")();
 	pythonManager.Destroy();
 #ifdef WIN32
 	system("pause");

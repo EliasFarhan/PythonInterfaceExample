@@ -41,7 +41,7 @@ public:
 
 	void Init() override
 	{
-		PYBIND11_OVERLOAD_PURE(
+		PYBIND11_OVERLOAD(
 			void,
 			Component,
 			Init,
@@ -49,7 +49,7 @@ public:
 	}
 	void Update() override
 	{
-		PYBIND11_OVERLOAD_PURE(
+		PYBIND11_OVERLOAD(
 			void,
 			Component,
 			Update,
@@ -68,7 +68,7 @@ public:
 	*/
 	void Init();
 
-	void LoadFile(std::string script_name);
+	py::object LoadFile(std::string script_name);
 	/**
 	* \brief Finalize the python interpreter
 	*/

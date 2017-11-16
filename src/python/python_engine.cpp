@@ -40,7 +40,7 @@ namespace sfge
 PYBIND11_EMBEDDED_MODULE(SFGE, m)
 {
 	py::class_<GameObject> game_object(m, "GameObject");
-	py::class_<Component, PyComponent> component(m, "Component");
+	py::class_<Component,PyComponent> component(m, "Component");
 	component.def(py::init<>());
 	component.def("Init", &Component::Init);
 
@@ -84,7 +84,7 @@ void PythonManager::Init()
 	py::initialize_interpreter();
 }
 
-void PythonManager::LoadFile(std::string script_path)
+py::object PythonManager::LoadFile(std::string script_path)
 {
 
 
@@ -93,7 +93,7 @@ void PythonManager::LoadFile(std::string script_path)
 	{
 		try
 		{
-			std::string module_name = p.filename().replace_extension(fs::path());
+			std::string module_name = p.filename().replace_extension("");
 			std::string class_name = module2class(module_name);
 			py::object globals  = py::globals();
 			py::object module   = import(module_name, script_path, globals);
@@ -101,18 +101,24 @@ void PythonManager::LoadFile(std::string script_path)
 			py::object ComponentClass = module.attr(class_name.c_str());
 			std::cout << "Class name: "<< py::str(ComponentClass).cast<std::string>() <<"\n";
 			py::object component = ComponentClass();
+			PyComponent* c = component.cast<PyComponent*>();
+			c->Init();
 			std::cout << "Created new Component\n";
-			component.attr("Init")();
+			return component;
 		}
 		catch(const py::error_already_set& e)
 		{
 		    std::cerr << ">>> Error! Uncaught exception: \n";
 		    std::cerr << e.what() << "\n";
-		    PyErr_Print();
 
 		}
 	}
+	else
+	{
+		std::cerr << "[ERROR] File : "<< script_path <<" is not a file!\n";
+	}
 
+	return py::object();
 }
 void PythonManager::Destroy()
 {
